@@ -102,9 +102,9 @@ public class Fonction {
             if (parts.length == 2) {
                 String cle = parts[0].trim();
                 String valeur = parts[1].trim();
-                if (cle.contains("Affichage.")) {
+                /*if (cle.contains("Affichage.")) {
                     cle = cle.substring(cle.lastIndexOf(".") + 1).toLowerCase();
-                }
+                }*/
                 donnees.put(cle, valeur);
             }
         }

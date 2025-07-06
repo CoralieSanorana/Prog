@@ -61,12 +61,22 @@ public class Composant {
             // Ajouter les lignes de données
             for (int i = 0;i<getData().size();i++) {
                 htmlTable+="<tr>\n";
-                for (int j = 0;j<tableau_champ.length;j++) {
-                    tableau_champ[j].setAccessible(true);
+                for (int j = 0 ; j < tableau_champ.length ; j++ ) {
+                    Field f = tableau_champ[j];
+                    f.setAccessible(true);
                     htmlTable+= "<td>";
-                    htmlTable+=getValField(getData().get(i),tableau_champ[j]);
-                    htmlTable+= "</td>\n";
-
+                    if(f.getType().getName().contains("Affichage.")){
+                        try {
+                            Class<? extends Composant> classModel = (Class<? extends Composant>) Class.forName(f.getType().getName());
+                            Composant instance = classModel.newInstance();
+                            htmlTable += instance.construireHtmlTable();
+                        } catch (Exception e) {
+                            htmlTable += "Erreur !!!!";
+                        }
+                    } else{
+                        htmlTable+=getValField(getData().get(i),f);
+                        htmlTable+= "</td>\n";
+                    }
                 }
                 htmlTable+="</tr>\n";
             }
