@@ -104,6 +104,7 @@ public class Composant {
         } catch (Exception e) {
             retour += "Erreur de la mise en formulaire !!!";
         }
+        retour += "<input type=\"hidden\" name=\"class_type\" value='"+ this.getClass().getName() +"'/>\n";
         retour += "<input type=\"submit\" value=\"Valider\">";
         retour += "</form>";
 
