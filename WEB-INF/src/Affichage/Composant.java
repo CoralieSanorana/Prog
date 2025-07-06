@@ -43,7 +43,73 @@ public class Composant {
         return html;
     }
 
-    public String construireHtmlTable(){
+    public String construireHtmlTable() {
+        if (getData() == null || getData().isEmpty()) {
+            System.out.println("Aucune donnée disponible pour construire la table");
+            return "<table style='border-collapse: collapse; border: 1px solid black;'></table>";
+        }
+
+        StringBuilder htmlTable = new StringBuilder();
+        htmlTable.append("<table style='border-collapse: collapse; border: 1px solid black;'>\n");
+        htmlTable.append("<tr>\n");
+
+        // Ajouter les en-têtes de colonnes
+        Field[] fields = getData().get(0).getClass().getDeclaredFields();
+        for (Field field : fields) {
+            htmlTable.append("<th style='border: 1px solid black; padding: 5px;'>")
+                     .append(escapeHtml(field.getName()))
+                     .append("</th>\n");
+        }
+        htmlTable.append("</tr>\n");
+
+        // Ajouter les lignes de données
+        for (Object data : getData()) {
+            htmlTable.append("<tr>\n");
+            for (Field field : fields) {
+                field.setAccessible(true);
+                htmlTable.append("<td style='border: 1px solid black; padding: 5px;'>");
+                try {
+                    if (Composant.class.isAssignableFrom(field.getType())) {
+                        System.out.println("Champ spécial détecté: " + field.getName() + ", Type: " + field.getType().getName());
+                        Composant component = (Composant) field.get(data);
+                        if (component != null) {
+                            String sousTable = component.construireHtmlTable();
+                            System.out.println("Sous-table générée: " + sousTable);
+                            htmlTable.append(sousTable);
+                        } else {
+                            System.out.println("Champ spécial est null pour: " + field.getName());
+                            htmlTable.append("");
+                        }
+                    } else {
+                        Object value = getValField(data, field);
+                        System.out.println("Valeur champ non spécial: " + field.getName() + " = " + value);
+                        htmlTable.append(value);
+                    }
+                } catch (IllegalAccessException e) {
+                    System.err.println("Erreur d'accès au champ " + field.getName() + ": " + e.getMessage());
+                    htmlTable.append("Erreur d'accès au champ");
+                } catch (Exception e) {
+                    System.err.println("Erreur inattendue pour le champ " + field.getName() + ": " + e.getMessage());
+                    htmlTable.append("Erreur: ").append(escapeHtml(e.getMessage()));
+                }
+                htmlTable.append("</td>\n");
+            }
+            htmlTable.append("</tr>\n");
+        }
+        htmlTable.append("</table>\n");
+
+        return htmlTable.toString();
+    }
+
+    private String escapeHtml(String input) {
+        if (input == null) return "";
+        return input.replace("&", "&amp;")
+                   .replace("<", "&lt;")
+                   .replace(">", "&gt;")
+                   .replace("\"", "&quot;")
+                   .replace("'", "&#39;");
+    }
+    /*public String construireHtmlTable(){
         if(getData()!=null && getData().size()>0) {
             String htmlTable = "";
             htmlTable += "<table border='1'>\n";
@@ -71,12 +137,12 @@ public class Composant {
                             Composant instance = classModel.newInstance();
                             htmlTable += instance.construireHtmlTable();
                         } catch (Exception e) {
-                            htmlTable += "Erreur !!!!";
+                            htmlTable += " Erreur !!!! ";
                         }
                     } else{
                         htmlTable+=getValField(getData().get(i),f);
-                        htmlTable+= "</td>\n";
                     }
+                    htmlTable+= "</td>\n";
                 }
                 htmlTable+="</tr>\n";
             }
@@ -85,7 +151,7 @@ public class Composant {
             return htmlTable;
         }
         return "";
-    }
+    }*/
 
     public static String convertDebutMajuscule(String autre) {
         char[] c = autre.toCharArray();

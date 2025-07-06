@@ -106,6 +106,7 @@ public class Fonction {
                     cle = cle.substring(cle.lastIndexOf(".") + 1).toLowerCase();
                 }*/
                 donnees.put(cle, valeur);
+                System.out.println("Cle :"+cle+" Valeur: "+valeur);
             }
         }
         return donnees;
