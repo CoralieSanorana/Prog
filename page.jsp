@@ -11,19 +11,20 @@
 </h1>
 <br/>
 <%
-//Personne p = new Personne();
-    Vector tableau = new Vector();
-    tableau.add(new Personne("Jean","Jaques",  30));
+    Fonction F = new Fonction();
+    Vector<Object> liste = F.lire("C:/xampp/tomcat/webapps/Prog/sauvegarder.t");
+    Liste l = new Liste(liste);
+    PersonneLocalise pl = new PersonneLocalise();
+    out.println(pl.construire_formulaire());
+    out.println(l.construireHtmlTable());
+    //Personne p = new Personne();
+    /*tableau.add(new Personne("Jean","Jaques",  30));
     tableau.add(new Personne("Marie","Jeanne",  25));
-    tableau.add(new Personne("Paul","Phoenix", 40));
-Liste l = new Liste(tableau);
+    tableau.add(new Personne("Paul","Phoenix", 40));*/
 //Localite loc = new Localite();
-PersonneLocalise pl = new PersonneLocalise();
 //    Voiture v = new Voiture();
-out.println(pl.construire_formulaire());
 //out.println(p.construireHtmlInsertComposant());
 //out.println(loc.construireHtmlInsertComposant());
-//out.println(l.construireHtmlTable());
 
 %>
 </body>
